@@ -3,9 +3,9 @@
   <test name="ChromeTest">
   <parameter name= "browser" value="chrome"/>
     <classes>
-      <class name="PageObjects.HomePage">
+      <class name="TestcasesByEpics.Test_01">
       <methods>
-      <include name = "homePageLogin" />
+      <include name = "testValidLogin" />
       </methods>
       </class>
     </classes>

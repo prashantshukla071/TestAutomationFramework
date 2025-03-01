@@ -75,6 +75,9 @@ public class CommonFunctions {
 			driver.quit(); } 
 	}
 	*/
+	public void launchURL(String url) {
+		driver.get(url);
+	}
 	
 	@BeforeMethod()
 	@Parameters("browser")	//Pass the browser type from TestNG.XML
