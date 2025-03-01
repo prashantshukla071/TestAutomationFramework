@@ -1,0 +1,3 @@
+#Certain Common Methods to create in POM
+clickOn, enterByXpath, clearByXpath, waitTime, selectBy, verifyVisibleByXpath, getText, verifyGetText, switchToframe, 
+switchToParentWindow, switchToNewWindow, takesScreenshot, takesScreenshotOfSection, takesScreenshotOfElement
