@@ -1,6 +1,8 @@
 package CommonFunctions;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -30,17 +33,17 @@ import Utils.Log;
 public class CommonFunctions {
 
 	public static WebDriver driver;
-	
-//	ListenerClass listenerClass;
-	
+
+	//	ListenerClass listenerClass;
+
 	public static void main(String[] args) {
 		ListenerClass ls = new ListenerClass();
 		ls.statementOne();
-		
-	}
-	
 
-	
+	}
+
+
+
 	//URLs for the FreeAutomationPractice websites
 	public String NopCommerce = "https://www.nopcommerce.com/";
 	public String ultimateQA = "https://ultimateqa.com/";
@@ -68,24 +71,24 @@ public class CommonFunctions {
 	 * @AfterMethod(alwaysRun = true) public void tearDown() { try {
 	 * System.out.println("In TearDown Closing Browser ============");
 	 * if(driver!=null) { driver.close(); driver.quit(); } }
-	 
+
 		catch (Exception e) { 
 			Alert alert = driver.switchTo().alert(); 
 			alert.accept(); 
 			driver.quit(); } 
 	}
-	*/
+	 */
 	public void launchURL(String url) {
 		driver.get(url);
 	}
-	
+
 	@BeforeMethod()
 	@Parameters("browser")	//Pass the browser type from TestNG.XML
 	public void setup(String browser) {
 		Log.info("Starting Browser");
 		driver = DriverManager.getDriver(browser);
 	}
-	
+
 	@AfterMethod()
 	public void teardown() {
 		Log.info("Closing Browser");
@@ -109,7 +112,7 @@ public class CommonFunctions {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//Explicit Wait
 	public void explicitWait(String xpathOfElement, int timeInSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeInSeconds));
@@ -118,16 +121,16 @@ public class CommonFunctions {
 
 	public void SwitchToSelectedFrame(int iframe){
 		try {
-		waitTime(5);
-		List<WebElement> frames = driver.findElements(By.tagName("iframe"));
-		System.out.println("The Sixe of the frame is: "+frames.size());
-		if(frames.size()!=0) {
-			driver.switchTo().frame(iframe);
-			Log.info("Successfully Switched the frame: {"+iframe+"}");
+			waitTime(5);
+			List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+			System.out.println("The Sixe of the frame is: "+frames.size());
+			if(frames.size()!=0) {
+				driver.switchTo().frame(iframe);
+				Log.info("Successfully Switched the frame: {"+iframe+"}");
+			}
+		}catch(IndexOutOfBoundsException e) {
+			System.out.println("Provided frame is out of bound.."+ e.getMessage());
 		}
-	}catch(IndexOutOfBoundsException e) {
-		System.out.println("Provided frame is out of bound.."+ e.getMessage());
-	}
 	}
 
 	public void SwitchToFrame() throws Exception{		
@@ -204,7 +207,7 @@ public class CommonFunctions {
 		}
 		return GetText;
 	}
-	
+
 	public void newWindow(int windowIndex) throws Exception{
 		String parentWindow=driver.getWindowHandle();
 		System.out.println("Current Window: "+driver.getTitle());
@@ -220,7 +223,7 @@ public class CommonFunctions {
 			System.out.println("Window size is invalid!!");
 		}		
 	}
-	
+
 
 	public void navigateToNewWindow() throws Exception{
 		String parentWindow= driver.getWindowHandle();
@@ -229,12 +232,12 @@ public class CommonFunctions {
 		driver.switchTo().window(windowHandles.get(1));
 		System.out.println("In New Window: "+driver.getTitle());
 	}
-	
+
 	public void switchToWindow(int win) {
 		String parentWindow = driver.getWindowHandle();
 		String parentWindowTitle = driver.getTitle();
 		System.out.println("Parent Window Title: "+parentWindowTitle);
-		
+
 		ArrayList<String> windowHandles = new ArrayList<>(driver.getWindowHandles());
 		if(win<windowHandles.size()) {
 			driver.switchTo().window(windowHandles.get(win));
@@ -301,7 +304,7 @@ public class CommonFunctions {
 		driver.switchTo().newWindow(WindowType.WINDOW);
 		driver.get(url);
 	}
-	
+
 	public void openLinkInNewWindow(String url, String url2, String url3) {
 		List<String> list = new ArrayList<String>();
 		list.add(url);
@@ -321,20 +324,65 @@ public class CommonFunctions {
 
 	public void datePicker(String expYear, String expMonth, String day) {
 		driver.findElement(By.xpath("//input[@id='datepicker']")).click();
-		
+
 		//Implementing explicit wait mechanism
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ui-datepicker-div")));
-		
+
 		String currentMonth = driver.findElement(By.className("ui-datepicker-month")).getText();
 		String currentYear = driver.findElement(By.className("ui-datepicker-year")).getText();
-		
+
 		while(!(currentMonth.equals(expMonth) && currentYear.equals(expYear))) {
 			driver.findElement(By.xpath("//a[@title='Next']")).click();
 			currentMonth = driver.findElement(By.className("ui-datepicker-month")).getText();
 			currentYear = driver.findElement(By.className("ui-datepicker-year")).getText();			
 		}
 		driver.findElement(By.xpath("//td[@data-handler='selectDay']/a[contains(text(), '"+day+"')]")).click();
+	}
+
+
+	public static void excelFileReader(String filepath) {
+//		String filePath= filepath;
+		try {
+			FileInputStream input = new FileInputStream(filepath);
+
+			XSSFWorkbook workbook = new XSSFWorkbook(input);
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			
+			int rows=sheet.getLastRowNum();
+			int cols = sheet.getRow(1).getLastCellNum();
+			
+			//For-Loop			
+			for(int r=0; r<rows; r++) {			//outer loop represents the rows in excel
+				XSSFRow row = sheet.getRow(r);
+				
+				for(int c=0; c<cols; c++) {		// inner loop represents the cell in each row
+					XSSFCell cell = row.getCell(c);
+					
+					switch (cell.getCellType()) {
+					case STRING : System.out.print(cell.getStringCellValue()); break;
+					case NUMERIC : System.out.print(cell.getNumericCellValue()); break;
+					case BOOLEAN : System.out.print(cell.getBooleanCellValue()); break;
+					case BLANK:
+						break;
+					case ERROR:
+						break;
+					case FORMULA:
+						break;
+					case _NONE:
+						break;
+					default:
+						break;					
+					}
+					System.out.print(" | ");
+				}
+				System.out.println();
+			}
+			workbook.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 

@@ -6,7 +6,7 @@
       <class name="TestcasesByEpics.Test_01">
         <methods>
           <include name="setup"/>
-          <include name="testValidLogin"/>
+          <include name="testReadExcelAndPrintOnConsole"/>
           <include name="teardown"/>
         </methods>
       </class> <!-- TestcasesByEpics.Test_01 -->

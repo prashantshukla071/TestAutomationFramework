@@ -1,3 +1,4 @@
-2025-03-02 02:19:39 [main] INFO  Log - Starting Browser
-2025-03-02 02:19:47 [main] INFO  Log - Successfuly entered the date..
-2025-03-02 02:19:47 [main] INFO  Log - Closing Browser
+2025-03-04 01:30:54 [main] INFO  Log - Starting Browser
+2025-03-04 01:30:58 [main] INFO  Log - Excel reader method is initialized
+2025-03-04 01:30:59 [main] INFO  Log - Testcase is complete, the data hasbeen successfully printed
+2025-03-04 01:30:59 [main] INFO  Log - Closing Browser

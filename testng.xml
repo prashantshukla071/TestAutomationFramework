@@ -5,7 +5,7 @@
     <classes>
       <class name="TestcasesByEpics.Test_01">
       <methods>
-      <include name = "testValidLogin" />
+      <include name = "testReadExcelAndPrintOnConsole" />
       </methods>
       </class>
     </classes>
