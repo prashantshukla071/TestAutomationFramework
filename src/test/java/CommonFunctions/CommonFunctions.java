@@ -1,17 +1,22 @@
 package CommonFunctions;
+import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.Iterator;
 import org.apache.poi.xssf.usermodel.*;
 import org.openqa.selenium.Alert;
@@ -419,13 +424,114 @@ public class CommonFunctions {
 	 * @Return: String token, UpperCase
 	 * @Functionality: can be used to generate random token value based on the input length provided
 	 */
-	static String randomCharacters(int lengthOfString) {
+	public String randomCharacters(int lengthOfString) {
 		String reqRandom= UUID.randomUUID().toString();
 		
 		reqRandom = reqRandom.replace("-", "");
 		reqRandom= reqRandom.substring(0, lengthOfString).toUpperCase();
 		//System.out.println(reqRandom);
 		return reqRandom;
+	}
+	
+	/*
+	 *  @param: takes length of the token to be generated 
+	 * @Return: String token
+	 * @Functionality: can be used to generate random Alpha-Numeric token value based on the input length provided
+	 */
+	
+	static String randomAlphaNumericTokens(int length) {
+		String token= RandomStringUtils.random(length, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+		System.out.println("Token: "+token);
+		return token;
+	}
+	
+	/*
+	 *  @param: takes length of the token to be generated & type of the Random Value
+	 * @Return: String token
+	 * @Functionality: can be used to generate random
+	 * 					Numeric token
+	 * 					Character token
+	 * 					Alpha-Numeric token
+	 */
+	static String RandomValueGenerator(int length, String type) {
+		SecureRandom random = new SecureRandom();		
+		type=type.toLowerCase();
+		
+		if(length<=0) {
+			return "Invalid Length";
+		}
+		
+		switch (type) {
+		
+		//Numeric Value Generator
+		case "numeric":
+			String numbers = "0123456789";
+			StringBuilder numericSB = new StringBuilder();
+			for(int i=0; i<length; i++) {
+				int randomValue=random.nextInt(numbers.length());
+				numericSB.append(numbers.charAt(randomValue));
+			}
+			//System.out.println("Random Number: "+numericSB.toString());
+			return numericSB.toString();
+			
+		//Characters Value Generator	
+		case "character":
+			String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			StringBuilder characterSB = new StringBuilder();
+			for(int i=0; i<length; i++) {
+				int randomValue= random.nextInt(characters.length());
+				characterSB.append(characters.charAt(randomValue));
+			}
+			//System.out.println("Random Number: "+characterSB.toString());
+			return characterSB.toString();
+			
+		//Alpha-Numeric Value Generator		
+		case "alphanumeric":
+			String alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			StringBuilder alphanumericSB = new StringBuilder();
+			for(int i=0; i<length; i++) {
+				int randomValue= random.nextInt(alphanumeric.length());
+				alphanumericSB.append(alphanumeric.charAt(randomValue));
+			}
+			//System.out.println("Random Number: "+alphanumericSB.toString());
+			return alphanumericSB.toString();
+			
+		default:
+			return "Invalid Type Provided";
+		}
+	}
+	
+	/*
+	 * @param: takes locator, actionType to perform
+	 * @Functionalities: click, Mouse Hover, Double Click, Right Click, Click and Hold
+	 */
+	public void ActionsClassOperations(String locator, String actionType) {
+		Actions action = new Actions(driver);
+		WebElement element = driver.findElement(By.xpath(locator));
+		actionType.toLowerCase();
+		
+		switch (actionType) {		
+		//Perform Click Action on the Web Element
+		case "click": 
+			action.moveToElement(element).click();
+			break;		
+		//Perform Mouse Hover Action on the Web Element
+		case "mousehover": 
+			action.moveToElement(element).build().perform();
+			break;
+		//Double Click action on the Web Element	
+		case "doubleclick": 
+			action.doubleClick(element).perform();
+			break;
+		//Right Click action on the Web Element
+		case "rightclick": 
+			action.contextClick(element).perform();
+			break;
+		//Click and Hold action on the Web Element	
+		case "clickandhold":
+			action.clickAndHold(element).perform();
+			break;		
+		}
 	}
 
 
