@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import java.util.Iterator;
 import org.apache.poi.xssf.usermodel.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -39,7 +41,6 @@ public class CommonFunctions {
 	public static void main(String[] args) {
 		ListenerClass ls = new ListenerClass();
 		ls.statementOne();
-
 	}
 
 
@@ -342,23 +343,23 @@ public class CommonFunctions {
 
 
 	public static void excelFileReader(String filepath) {
-//		String filePath= filepath;
+		//		String filePath= filepath;
 		try {
 			FileInputStream input = new FileInputStream(filepath);
 
 			XSSFWorkbook workbook = new XSSFWorkbook(input);
 			XSSFSheet sheet = workbook.getSheetAt(0);
-			
-			int rows=sheet.getLastRowNum();
+
+			/*	int rows=sheet.getLastRowNum();
 			int cols = sheet.getRow(1).getLastCellNum();
-			
+
 			//For-Loop			
 			for(int r=0; r<rows; r++) {			//outer loop represents the rows in excel
 				XSSFRow row = sheet.getRow(r);
-				
+
 				for(int c=0; c<cols; c++) {		// inner loop represents the cell in each row
 					XSSFCell cell = row.getCell(c);
-					
+
 					switch (cell.getCellType()) {
 					case STRING : System.out.print(cell.getStringCellValue()); break;
 					case NUMERIC : System.out.print(cell.getNumericCellValue()); break;
@@ -378,11 +379,53 @@ public class CommonFunctions {
 				}
 				System.out.println();
 			}
+			 */
+
+			Iterator rowiterator = sheet.iterator();
+			while(rowiterator.hasNext()) {
+				XSSFRow row = (XSSFRow) rowiterator.next();
+				Iterator cellIterator = row.cellIterator();
+
+				while (cellIterator.hasNext()) {
+					XSSFCell cell = (XSSFCell) cellIterator.next();
+
+					switch (cell.getCellType()) {
+					case STRING : System.out.print(cell.getStringCellValue()); break;
+					case NUMERIC : System.out.print(cell.getNumericCellValue()); break;
+					case BOOLEAN : System.out.print(cell.getBooleanCellValue()); break;
+					case BLANK:
+						break;
+					case ERROR:
+						break;
+					case FORMULA:
+						break;
+					case _NONE:
+						break;
+					default:
+						break;					
+					}
+					System.out.print(" | ");
+				}
+				System.out.println();
+			}			
 			workbook.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/* @param: takes length of the token to be generated 
+	 * @Return: String token, UpperCase
+	 * @Functionality: can be used to generate random token value based on the input length provided
+	 */
+	static String randomCharacters(int lengthOfString) {
+		String reqRandom= UUID.randomUUID().toString();
+		
+		reqRandom = reqRandom.replace("-", "");
+		reqRandom= reqRandom.substring(0, lengthOfString).toUpperCase();
+		//System.out.println(reqRandom);
+		return reqRandom;
 	}
 
 
