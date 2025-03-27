@@ -2,12 +2,18 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-03-04T01:56:51 IST" name="Suite" finished-at="2025-03-04T01:56:56 IST" duration-ms="4948">
+  <suite started-at="2025-03-28T00:55:41 IST" name="Suite" finished-at="2025-03-28T00:56:25 IST" duration-ms="44494">
     <groups>
+      <group name="Regression">
+        <method signature="FindMinAndMaxPricePhone.minAndMaxPrices()[pri:0, instance:TestcasesByEpics.FindMinAndMaxPricePhone@2362f559]" name="minAndMaxPrices" class="TestcasesByEpics.FindMinAndMaxPricePhone"/>
+      </group> <!-- Regression -->
+      <group name="Smoke">
+        <method signature="FindMinAndMaxPricePhone.minAndMaxPrices()[pri:0, instance:TestcasesByEpics.FindMinAndMaxPricePhone@2362f559]" name="minAndMaxPrices" class="TestcasesByEpics.FindMinAndMaxPricePhone"/>
+      </group> <!-- Smoke -->
     </groups>
-    <test started-at="2025-03-04T01:56:51 IST" name="ChromeTest" finished-at="2025-03-04T01:56:56 IST" duration-ms="4948">
-      <class name="TestcasesByEpics.Test_01">
-        <test-method is-config="true" signature="setup(java.lang.String)[pri:0, instance:TestcasesByEpics.Test_01@6ad82709]" started-at="2025-03-04T01:56:51 IST" name="setup" finished-at="2025-03-04T01:56:55 IST" duration-ms="3579" status="PASS">
+    <test started-at="2025-03-28T00:55:41 IST" name="ChromeTest" finished-at="2025-03-28T00:56:25 IST" duration-ms="44494">
+      <class name="TestcasesByEpics.FindMinAndMaxPricePhone">
+        <test-method is-config="true" signature="setup(java.lang.String)[pri:0, instance:TestcasesByEpics.FindMinAndMaxPricePhone@2362f559]" started-at="2025-03-28T00:55:41 IST" name="setup" finished-at="2025-03-28T00:55:50 IST" duration-ms="8540" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -18,15 +24,15 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="testReadExcelAndPrintOnConsole()[pri:0, instance:TestcasesByEpics.Test_01@6ad82709]" started-at="2025-03-04T01:56:55 IST" name="testReadExcelAndPrintOnConsole" finished-at="2025-03-04T01:56:56 IST" duration-ms="1054" status="PASS">
+        <test-method signature="minAndMaxPrices()[pri:0, instance:TestcasesByEpics.FindMinAndMaxPricePhone@2362f559]" started-at="2025-03-28T00:55:50 IST" name="minAndMaxPrices" description="Test-ID" finished-at="2025-03-28T00:56:24 IST" duration-ms="34477" status="PASS">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- testReadExcelAndPrintOnConsole -->
-        <test-method is-config="true" signature="teardown()[pri:0, instance:TestcasesByEpics.Test_01@6ad82709]" started-at="2025-03-04T01:56:56 IST" name="teardown" finished-at="2025-03-04T01:56:56 IST" duration-ms="253" status="PASS">
+        </test-method> <!-- minAndMaxPrices -->
+        <test-method is-config="true" signature="teardown()[pri:0, instance:TestcasesByEpics.FindMinAndMaxPricePhone@2362f559]" started-at="2025-03-28T00:56:24 IST" name="teardown" finished-at="2025-03-28T00:56:25 IST" duration-ms="649" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- teardown -->
-      </class> <!-- TestcasesByEpics.Test_01 -->
+      </class> <!-- TestcasesByEpics.FindMinAndMaxPricePhone -->
     </test> <!-- ChromeTest -->
   </suite> <!-- Suite -->
 </testng-results>

@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="TestcasesByEpics.Test_01">
+      <class name="TestcasesByEpics.FindMinAndMaxPricePhone">
         <methods>
           <include name="setup"/>
-          <include name="testReadExcelAndPrintOnConsole"/>
+          <include name="minAndMaxPrices"/>
           <include name="teardown"/>
         </methods>
-      </class> <!-- TestcasesByEpics.Test_01 -->
+      </class> <!-- TestcasesByEpics.FindMinAndMaxPricePhone -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

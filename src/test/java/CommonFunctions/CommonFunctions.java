@@ -3,13 +3,13 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -34,21 +34,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
 import Utils.DriverManager;
-import Utils.ListenerClass;
+import Utils.ExtentTestManager;
 import Utils.Log;
 
 public class CommonFunctions {
 
 	public static WebDriver driver;
-
-	//	ListenerClass listenerClass;
-
-	public static void main(String[] args) {
-		ListenerClass ls = new ListenerClass();
-		ls.statementOne();
-	}
-
-
 
 	//URLs for the FreeAutomationPractice websites
 	public String NopCommerce = "https://www.nopcommerce.com/";
@@ -84,12 +75,16 @@ public class CommonFunctions {
 			driver.quit(); } 
 	}
 	 */
-	public void launchURL(String url) {
+	public static void launchURL(String url) {
 		driver.get(url);
 	}
 
+	/*
+	takes input parameter @browser type from testng.xml
+	DriverManager.java is configured as such that after taking input from testng.xml it intializes the driver
+	 */
 	@BeforeMethod()
-	@Parameters("browser")	//Pass the browser type from TestNG.XML
+	@Parameters("browser")	
 	public void setup(String browser) {
 		Log.info("Starting Browser");
 		driver = DriverManager.getDriver(browser);
@@ -99,6 +94,16 @@ public class CommonFunctions {
 	public void teardown() {
 		Log.info("Closing Browser");
 		DriverManager.quitDriver();
+	}
+	
+	static void PropertyFileReader() throws IOException {
+		Properties properties = new Properties();
+		FileInputStream fis = new FileInputStream(".\\src\\test\\resources\\config.properties");
+		properties.load(fis);
+		String browser= properties.getProperty("browser");
+		System.out.println("Browser: "+browser);
+		String url = properties.getProperty("URL");
+		System.out.println("URL: "+url);
 	}
 
 
@@ -239,15 +244,18 @@ public class CommonFunctions {
 		System.out.println("In New Window: "+driver.getTitle());
 	}
 
-	public void switchToWindow(int win) {
+	public void switchToWindow(int targetWindow) {
 		String parentWindow = driver.getWindowHandle();
 		String parentWindowTitle = driver.getTitle();
 		System.out.println("Parent Window Title: "+parentWindowTitle);
-
-		ArrayList<String> windowHandles = new ArrayList<>(driver.getWindowHandles());
-		if(win<windowHandles.size()) {
-			driver.switchTo().window(windowHandles.get(win));
+		Set<String> windowHandles = driver.getWindowHandles();
+		ArrayList<String> allWindowHandlesList = new ArrayList<>(windowHandles);
+		System.out.println("Size of the Window List: "+allWindowHandlesList.size());
+		if(targetWindow>0 && targetWindow < allWindowHandlesList.size()) {
+			driver.switchTo().window(allWindowHandlesList.get(targetWindow));
 			System.out.println("New Window: "+driver.getTitle());
+		} else {
+			System.out.println(targetWindow+" Invalid Window Index");
 		}
 	}
 
@@ -530,7 +538,9 @@ public class CommonFunctions {
 		//Click and Hold action on the Web Element	
 		case "clickandhold":
 			action.clickAndHold(element).perform();
-			break;		
+			break;
+		default: 
+			System.out.println("Invalid Type");
 		}
 	}
 

@@ -1,6 +1,9 @@
 package TestcasesByEpics;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 
@@ -8,15 +11,27 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class generator {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 //		randomAlphaNumericTokens(60);
 		
-		System.out.println("Numeric: "+RandomValueGenerator(-1, "Numeric"));
-		System.out.println("Character: "+RandomValueGenerator(10, "Character"));
-		System.out.println("Alpha-Numeric: "+RandomValueGenerator(10, "alphanumeric"));
+//		System.out.println("Numeric: "+RandomValueGenerator(10, "Numeric"));
+//		System.out.println("Character: "+RandomValueGenerator(10, "Character"));
+//		System.out.println("Alpha-Numeric: "+RandomValueGenerator(10, "alphanumeric"));
 //		System.out.println("Default: "+RandomValueGenerator(10, "alphanumericsss"));
+		
+		PropertyFileReader();
 
+	}
+	
+	static void PropertyFileReader() throws IOException {
+		Properties properties = new Properties();
+		FileInputStream fis = new FileInputStream(".\\src\\test\\resources\\config.properties");
+		properties.load(fis);
+		String browser= properties.getProperty("browser");
+		System.out.println("Browser: "+browser);
+		String url = properties.getProperty("URL");
+		System.out.println("URL: "+url);
 	}
 	
 	/*

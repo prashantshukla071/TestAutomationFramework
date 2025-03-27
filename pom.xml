@@ -5,11 +5,11 @@
 	<groupId>TestAutomationFrameworkSetup</groupId>
 	<artifactId>TestAutomationFrameworkSetup_Practice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
-<!--Shortcut for correct indentation: ctrl+shift+f -->
+
+	<!--Shortcut for correct indentation: ctrl+shift+f -->
 
 	<dependencies>
-	
+
 		<!-- Selenium -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -68,12 +68,17 @@
 			<version>5.4.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.17.0</version>
-</dependency>
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.17.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+		<dependency>
+			<groupId>com.aventstack</groupId>
+			<artifactId>extentreports</artifactId>
+			<version>5.1.2</version>
+		</dependency>
 
 
 	</dependencies>
