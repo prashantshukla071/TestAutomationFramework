@@ -12,6 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import CommonFunctions.CommonFunctions;
 import CommonFunctions.JavaScriptUtils;
+import Utils.FileReader;
 import nopCommerce.locators.locators;
 
 public class HomePage extends CommonFunctions{
@@ -82,6 +83,7 @@ public class HomePage extends CommonFunctions{
 		
 
 	}
+	
 	
 	
 

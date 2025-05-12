@@ -1,14 +1,22 @@
 package CommonFunctions;
 import org.openqa.selenium.interactions.Actions;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
@@ -29,8 +37,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.*;
 
 import Utils.DriverManager;
@@ -39,7 +50,7 @@ import Utils.Log;
 
 public class CommonFunctions {
 
-	public static WebDriver driver;
+	protected static WebDriver driver;
 
 	//URLs for the FreeAutomationPractice websites
 	public String NopCommerce = "https://www.nopcommerce.com/";
@@ -48,6 +59,7 @@ public class CommonFunctions {
 	public String UltimateQAAutomation= "https://ultimateqa.com/automation";
 	public String OrangeHRMLive = "https://opensource-demo.orangehrmlive.com/";
 	public String MyShopEcommerce = "http://www.automationpractice.pl/index.php";
+	public String expandTesting="https://practice.expandtesting.com/tables";
 	public String DatePickerURL= "https://seleniumpractise.blogspot.com/2016/08/how-to-handle-calendar-in-selenium.html";
 
 	/*
@@ -81,7 +93,7 @@ public class CommonFunctions {
 
 	/*
 	takes input parameter @browser type from testng.xml
-	DriverManager.java is configured as such that after taking input from testng.xml it intializes the driver
+	DriverManager.java is configured as such that after taking input from testng.xml it initializes the driver
 	 */
 	@BeforeMethod()
 	@Parameters("browser")	
@@ -90,10 +102,17 @@ public class CommonFunctions {
 		driver = DriverManager.getDriver(browser);
 	}
 
-	@AfterMethod()
-	public void teardown() {
-		Log.info("Closing Browser");
-		DriverManager.quitDriver();
+//	@AfterMethod()
+//	public void teardown() {
+//		Log.info("Closing Browser");
+//		DriverManager.quitDriver();
+//	}
+	
+	@DataProvider(name="Random-data")
+	public Object[][] getData(String str){
+		return new Object[][] {
+			{"first-value"}, {"second-value"}, {"", ""}
+		};
 	}
 	
 	static void PropertyFileReader() throws IOException {
@@ -128,6 +147,14 @@ public class CommonFunctions {
 	public void explicitWait(String xpathOfElement, int timeInSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeInSeconds));
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathOfElement)));
+	}
+	
+	//Fluent Wait
+	public void fluentWait(int waitDurationInSeconds, int pollingEveryInSeconds) {
+	FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver);
+	wait.withTimeout(Duration.ofSeconds(waitDurationInSeconds));
+	wait.pollingEvery(Duration.ofSeconds(pollingEveryInSeconds));
+	wait.ignoring(NoSuchElementException.class);
 	}
 
 	public void SwitchToSelectedFrame(int iframe){
@@ -172,19 +199,20 @@ public class CommonFunctions {
 	}
 
 	public void enterByXpath(String xpath, String value) {
-		driver.findElement(By.xpath(xpath)).clear();
-		driver.findElement(By.xpath(xpath)).sendKeys(value);
+		WebElement ele= driver.findElement(By.xpath(xpath));
+		ele.clear();
+		ele.sendKeys(value);
 	}
 
 	public void selectDropdownByText(String xpath, String text) {
-		WebElement dropdowns=driver.findElement(By.xpath(xpath));
-		Select sl = new Select(dropdowns);
+		WebElement dropdown=driver.findElement(By.xpath(xpath));
+		Select sl = new Select(dropdown);
 		sl.selectByVisibleText(text);
 	}
 
 	public void selectDropdownByIndex(String xpath, int index) {
-		WebElement dropdowns=driver.findElement(By.xpath(xpath));
-		Select sl = new Select(dropdowns);
+		WebElement dropdown=driver.findElement(By.xpath(xpath));
+		Select sl = new Select(dropdown);
 		sl.selectByIndex(index);;
 	}
 
@@ -192,6 +220,35 @@ public class CommonFunctions {
 		WebElement dropdowns=driver.findElement(By.xpath(xpath));
 		Select sl = new Select(dropdowns);
 		sl.selectByValue(text);
+	}
+	
+	public  void selectDropdownInLargeOptionSet(String xpath, String partialText) {
+		Select dropdown= new Select(driver.findElement(By.xpath(xpath)));
+		List<WebElement> options= dropdown.getOptions();
+		for(WebElement option: options) {
+			if(option.getText().contains(partialText)) {
+				option.click();
+				break;
+			}
+		}
+	}
+	
+	public void selectTheOption(String xpath, String text) {
+		List <WebElement> dropdowns= driver.findElements(By.xpath(xpath));
+		int indexCount=0;
+		boolean flag=false;
+		for(WebElement drop: dropdowns) {
+			indexCount++;
+			if(drop.getText().trim().equalsIgnoreCase(text)){
+				drop.click();
+				System.out.println("Option found at index: "+indexCount);
+				flag=true;
+				break;
+			}
+		}
+		if(!flag) {
+			System.out.println("No option found with name '"+text+"'");
+		}
 	}
 
 	public String getText(String xpath) {
@@ -207,7 +264,7 @@ public class CommonFunctions {
 		return GetText;
 	}
 
-	public String getTextByWebElement(WebElement Element) {
+	public String getText(WebElement Element) {
 		String GetText="";
 		try {			
 			GetText = Element.getText().trim();
@@ -249,7 +306,7 @@ public class CommonFunctions {
 		String parentWindowTitle = driver.getTitle();
 		System.out.println("Parent Window Title: "+parentWindowTitle);
 		Set<String> windowHandles = driver.getWindowHandles();
-		ArrayList<String> allWindowHandlesList = new ArrayList<>(windowHandles);
+		List<String> allWindowHandlesList = new ArrayList<>(windowHandles);
 		System.out.println("Size of the Window List: "+allWindowHandlesList.size());
 		if(targetWindow>0 && targetWindow < allWindowHandlesList.size()) {
 			driver.switchTo().window(allWindowHandlesList.get(targetWindow));
@@ -261,9 +318,8 @@ public class CommonFunctions {
 
 	public void takesScreenshot(String ssName) throws IOException {	
 		TakesScreenshot ts = (TakesScreenshot) driver;
-		File src= ts.getScreenshotAs(OutputType.FILE);
-		File trg = new File(".\\screenshots\\"+ssName+".png");
-		FileUtils.copyFile(src, trg);
+		File src=	ts.getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(src, new File(".\\screenshots\\"+ssName+".png"));
 
 	}
 	public void takesScreenshotOfSection(String xpathOfSection, String sectionName) throws IOException {
@@ -291,10 +347,7 @@ public class CommonFunctions {
 	}
 
 	public void openLinkInNewTab(String url, String url2, String url3) throws IOException {
-		List<String> list = new ArrayList<String>();
-		list.add(url);
-		list.add(url2);
-		list.add(url3);
+		List<String> list =  Arrays.asList(url, url2, url3);
 		if(list.size()>1) {
 			for(int i=0; i<list.size(); i++) {
 				String URL= list.get(i);
@@ -320,10 +373,7 @@ public class CommonFunctions {
 	}
 
 	public void openLinkInNewWindow(String url, String url2, String url3) {
-		List<String> list = new ArrayList<String>();
-		list.add(url);
-		list.add(url2);
-		list.add(url3);
+		List<String> list = Arrays.asList(url, url2, url3);
 		if(list.size()>1) {
 			for(int i=0; i<list.size(); i++) {
 				String URL= list.get(i);
@@ -332,7 +382,7 @@ public class CommonFunctions {
 				driver.get(URL);
 			}
 		} else {
-			System.out.println("Doesnot have multiple links to open");
+			System.out.println("Doesn't have multiple links to open");
 		}
 	}
 
@@ -543,6 +593,78 @@ public class CommonFunctions {
 			System.out.println("Invalid Type");
 		}
 	}
+	
+	static void dragAndDrop(WebElement src, WebElement trg) {
+		Actions action = new Actions(driver);		
+		action.dragAndDrop(src, trg).perform();
+	}
+	
+	static void toolTipVerify(String locator, String text) {
+		WebElement ele= driver.findElement(By.xpath(locator));
+		String tooltip= ele.getAttribute("title");
+		Assert.assertEquals(text, tooltip);
+	}
+	
+	static void basicURLValidator() {
+		List<WebElement> links=driver.findElements(By.tagName("a"));
+		for(WebElement link: links) {
+			String url=link.getAttribute("href");
+			
+			if(url.isEmpty() || url==null) {
+				System.out.println("URL is empty or not set");
+				continue;
+			}
+			
+			if(url.startsWith("http://") || url.startsWith("https://")) {
+				System.out.println("URL is valid (format): "+url);
+			} else {
+				System.out.println("URL is invalid (bad-format): "+url);
+			}
+		}
+	}
+	static void URLValidator() {
+		List<WebElement> links= driver.findElements(By.tagName("a"));
+		for(WebElement link: links) {
+			String url= link.getAttribute("href");
+			try {
+				if(connectionRequest(url)) {
+					System.out.println("Valid URL: "+url);
+				} else {
+					System.out.println("invalid URL: "+url);
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	static boolean connectionRequest(String url) throws MalformedURLException, IOException {
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		connection.setRequestMethod("HEAD");
+		connection.connect();
+		int responseCode= connection.getResponseCode();
+		boolean result=false;
+		
+		if(responseCode>=400) {
+			System.out.println("URL is broken (invalid), response code: "+responseCode);
+			result=true;
+		} else {
+			System.out.println("URL is (valid) "+responseCode);
+		}
+		return result;
+	}
+	
+	static void robotAction() throws AWTException {
+		Robot robot = new Robot();
+		
+		//Enter Button Action
+		robot.keyPress(KeyEvent.VK_ENTER);
+		robot.keyRelease(KeyEvent.VK_ENTER);
+	}
+	
+	
+	
 
 
 }

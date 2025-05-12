@@ -60,5 +60,9 @@ public class JavaScriptUtils extends CommonFunctions {
 	    js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", ele);
 	}
 
+	public static void scrollByPixels(int pixel) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0, arguments[0])", pixel);
+	}
 
 }

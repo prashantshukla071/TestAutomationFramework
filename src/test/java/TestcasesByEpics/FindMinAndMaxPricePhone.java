@@ -39,6 +39,7 @@ public class FindMinAndMaxPricePhone extends CommonFunctions{
 			}
 		}
 		
+		//Loop over the Map
 		List<Entry<WebElement, Integer>> listEntry = new ArrayList<Map.Entry<WebElement, Integer>>(priceMap.entrySet());
 		listEntry.sort(Entry.comparingByValue());
 		
